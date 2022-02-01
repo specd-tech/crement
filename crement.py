@@ -128,30 +128,33 @@ CHARACTER_MAPPING = {
 }
 
 
-def convert(mapping):
+def _convert(mapping: str | int):
     return CHARACTER_MAPPING.get(mapping)
 
 
-def increment_filter(char):
-    if char == 71:
-        return 71
-    else:
-        return char + 1
-
-
-def increment_key(current_key):
+def crement(current_key: str, step: int):
     # remove for mine
     if not re.fullmatch("[a-zA-Z0-9]+", current_key):
         raise ValueError("Enter only alphanumeric values")
 
-    key_list = list(map(convert, list(current_key)))
+    key_list = list(map(_convert, list(current_key)))
 
     # If all chars are maxed at 71 rolls all chars back to 10 and adds a new char
     # if all(char == 71 for char in key_list):
     #     current_key = [10 for _ in range(len(current_key) + 1)]
     #     # Converts list of ints to strs and joins them to an empty string
     #     return "".join(list(map(convert, current_key)))
+
+    # figure out of to reverse
     if all(char == 71 for char in key_list):
         return "".join(["0" for _ in range(len(current_key) + 1)])
 
-    return "".join([convert(increment_filter(i)) for i in key_list])
+    for i, char in enumerate(key_list):
+        # test for decrement
+        if char == 71:
+            pass
+        else:
+            key_list[i] += step
+            break
+
+    return "".join([_convert(c) for c in key_list])
