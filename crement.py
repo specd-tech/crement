@@ -128,33 +128,41 @@ CHARACTER_MAPPING = {
 }
 
 
-def _convert(mapping: str | int):
+def _convert(mapping: str | int) -> int | str:
     return CHARACTER_MAPPING.get(mapping)
 
 
-def crement(current_key: str, step: int):
-    # remove for mine
-    if not re.fullmatch("[a-zA-Z0-9]+", current_key):
+def crementer(characters: str) -> str:
+    if not re.fullmatch("[a-zA-Z0-9]+", characters):
         raise ValueError("Enter only alphanumeric values")
 
-    key_list = list(map(_convert, list(current_key)))
+    # Converts alphanumeric characters to an int between 0-71 based on CHARACTER_MAPPING
+    char_list = list(map(_convert, list(characters)))
 
-    # If all chars are maxed at 71 rolls all chars back to 10 and adds a new char
-    # if all(char == 71 for char in key_list):
-    #     current_key = [10 for _ in range(len(current_key) + 1)]
-    #     # Converts list of ints to strs and joins them to an empty string
-    #     return "".join(list(map(convert, current_key)))
+    # Reverse char_list so the first value is the least significant character
+    char_list.reverse()
+    for i, char in enumerate(char_list):
+        if char >= 71:
+            # If all places are 71 add another place and resets current char to 10
+            if i == len(char_list) - 1:
+                char_list[i] = 10
+                char_list.append(10)
+                break
+            else:
+                char_list[i] = 10
+                # IF the next character is not 71 then the next character will not need to be carried over so the loop
+                # is broken. ELSE the next character will need to be carried over run the loop again to process the next
+                # character.
+                if char_list[i + 1] != 71:
+                    char_list[i + 1] += 1
+                    break
+                else:
+                    char_list[i + 1] += 1
 
-    # figure out of to reverse
-    if all(char == 71 for char in key_list):
-        return "".join(["0" for _ in range(len(current_key) + 1)])
-
-    for i, char in enumerate(key_list):
-        # test for decrement
-        if char == 71:
-            pass
         else:
-            key_list[i] += step
+            # Crements to the last place
+            char_list[i] += 1
             break
-
-    return "".join([_convert(c) for c in key_list])
+    char_list.reverse()
+    # Returns reconstructed string from char_list
+    return "".join([_convert(char) for char in char_list])
