@@ -132,7 +132,8 @@ def _convert(mapping: str | int) -> int | str:
     return CHARACTER_MAPPING.get(mapping)
 
 
-def crementer(characters: str) -> str:
+# test with step of -1 and greater then 1 or -1
+def crement(characters: str) -> str:
     if not re.fullmatch("[a-zA-Z0-9]+", characters):
         raise ValueError("Enter only alphanumeric values")
 
@@ -150,17 +151,18 @@ def crementer(characters: str) -> str:
                 break
             else:
                 char_list[i] = 10
-                # IF the next character is not 71 then the next character will not need to be carried over so the loop
-                # is broken. ELSE the next character will need to be carried over run the loop again to process the next
-                # character.
                 if char_list[i + 1] != 71:
+                    # If the next character is not 71 then the next character will not need to be carried over so the loop
+                    # is broken.
                     char_list[i + 1] += 1
                     break
                 else:
+                    # Else next character will be over 71 and need to be carried over, not breaking runs the loop again 
+                    # to process the next character.
                     char_list[i + 1] += 1
 
         else:
-            # Crements to the last place
+            # Increments to the last place
             char_list[i] += 1
             break
     char_list.reverse()
