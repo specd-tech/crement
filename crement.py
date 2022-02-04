@@ -144,22 +144,24 @@ def crement(characters: str) -> str:
     char_list.reverse()
     for i, char in enumerate(char_list):
         if char >= 71:
-            # If all places are 71 add another place and resets current char to 10
+            # Resets current position to the starting value of 10
+            char_list[i] = 10
+
+            # If all places are 71, add another place and resets current char to 10
             if i == len(char_list) - 1:
-                char_list[i] = 10
                 char_list.append(10)
                 break
+
+            # If the next character is not 71 then the next character will not need to be carried over so the loop
+            # is broken.
+            elif char_list[i + 1] != 71:
+                char_list[i + 1] += 1
+                break
+
+            # Else the next character will be over 71 and need to be carried over, not breaking runs the loop again
+            # to process the next character.
             else:
-                char_list[i] = 10
-                # If the next character is not 71 then the next character will not need to be carried over so the loop
-                # is broken.
-                if char_list[i + 1] != 71:
-                    char_list[i + 1] += 1
-                    break
-                else:
-                    # Else next character will be over 71 and need to be carried over, not breaking runs the loop again
-                    # to process the next character.
-                    char_list[i + 1] += 1
+                char_list[i + 1] += 1
 
         else:
             # Increments to the last place
@@ -168,5 +170,4 @@ def crement(characters: str) -> str:
 
     char_list.reverse()
     # Returns reconstructed string from char_list
-    # return "".join([_convert(char) for char in char_list])
     return "".join(list(map(_convert, char_list)))
