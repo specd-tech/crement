@@ -151,13 +151,13 @@ def crement(characters: str) -> str:
                 break
             else:
                 char_list[i] = 10
+                # If the next character is not 71 then the next character will not need to be carried over so the loop
+                # is broken.
                 if char_list[i + 1] != 71:
-                    # If the next character is not 71 then the next character will not need to be carried over so the loop
-                    # is broken.
                     char_list[i + 1] += 1
                     break
                 else:
-                    # Else next character will be over 71 and need to be carried over, not breaking runs the loop again 
+                    # Else next character will be over 71 and need to be carried over, not breaking runs the loop again
                     # to process the next character.
                     char_list[i + 1] += 1
 
@@ -165,6 +165,8 @@ def crement(characters: str) -> str:
             # Increments to the last place
             char_list[i] += 1
             break
+
     char_list.reverse()
     # Returns reconstructed string from char_list
-    return "".join([_convert(char) for char in char_list])
+    # return "".join([_convert(char) for char in char_list])
+    return "".join(list(map(_convert, char_list)))
